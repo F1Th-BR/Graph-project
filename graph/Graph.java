@@ -71,15 +71,23 @@ public class Graph {
     } // adds an edge
 
     // getter
-    public int getVerticesQuantity() {
-        return vertices.size();
-    } // returns the amount of vertices
-
     public int getEdgesQuantity() {
         return edges.size();
     } // returns the amount of edges
 
+    public List<Edge> getEdges() {
+        return Collections.unmodifiableList(edges);
+    }
 
+    public List<Vertex> getVertices(){
+        return Collections.unmodifiableList(vertices);
+    } // returns the list of vertices
+    
+    public int getVerticesQuantity() {
+        return vertices.size();
+    } // returns the amount of vertices
+    
+    
     public void printVertices() {
         for (Vertex e : vertices) {
             System.out.println("N.o do vértice: "+vertices.indexOf(e)+
