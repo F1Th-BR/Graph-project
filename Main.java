@@ -1,6 +1,12 @@
 import graph.*;
 import characters.*;
 
+/**
+ * 
+ * @author Thiago Feijó de Albuquerque
+ */
+
+// testing the classes
 public class Main {
     public static void main(String[] args) {
         Graph g = new Graph();
@@ -14,14 +20,12 @@ public class Main {
         Vertex v2 = new Vertex(character2);
         Vertex v3 = new Vertex(character3);
         Vertex v4 = new Vertex(character4);
-        //Vertex v5 = new Vertex(character4);
 
         g.addVertex(v1);
         g.addVertex(v2);
         g.addVertex(v3);
         g.addVertex(v4);
-        g.addVertex(v4);
-        //g.addVertex(v5);
+
 
         g.getVerticesQuantity();
         g.printVertices();
@@ -32,8 +36,6 @@ public class Main {
         g.addEdge(v2, v3, "relação", true);
         g.addEdge(v2, v4, "relação", true);
         g.addEdge(v3, v4, "relação", true);
-        g.addEdge(v4, v3, null, false);
-        //g.
 
         g.getEdgesQuantity();
         g.printEdges();

@@ -1,5 +1,11 @@
 package characters;
 
+/**
+ * 
+ * @author Thiago Feijó de Albuquerque
+ */
+
+
 public class RogueClass extends Personage {
     
     public RogueClass(String name, int age, String description, String alignment) {
