@@ -13,7 +13,7 @@ public class Main {
         Personage character1 = new Personage("Hytalo", 19, "Student", "FACOM");
         Personage character2 = new Personage("Diego", 0, "Professor", "FACOM");
         Personage character3 = new Personage("Cassiano", 21, "Student", "FACOM");
-        Personage character4 = new Personage("Feijo", 18, "Student", "FACOM");
+        Personage character4 = new Personage("Adam", 18, "Student", "FACOM");
 
 
         Vertex v1 = new Vertex(character1);
@@ -27,8 +27,6 @@ public class Main {
         g.addVertex(v4);
 
 
-        g.getVerticesQuantity();
-        g.printVertices();
 
         g.addEdge(v1, v2, "relação", false);
         g.addEdge(v1, v3, "relação", true);
@@ -37,8 +35,7 @@ public class Main {
         g.addEdge(v2, v4, "relação", true);
         g.addEdge(v3, v4, "relação", true);
 
-        g.getEdgesQuantity();
-        g.printEdges();
+//        GraphViewer.display(g);
 
     }
 
