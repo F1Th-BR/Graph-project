@@ -1,4 +1,4 @@
-package projectExceptions;
+package projectexceptions;
 /**
  * 
  * @author Thiago Feijó de Albuquerque

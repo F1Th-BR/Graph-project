@@ -1,6 +1,7 @@
 package graph;
 import java.util.*;
-import projectExceptions.*;
+
+import projectexceptions.*;
 
 /**
  * 
@@ -26,7 +27,7 @@ public class Graph {
     public void addVertex(Vertex v) {
         try { // checks if the vertex is valid
             if(vertices.contains(v)) // if the vertex v is already in the vertices list:
-                throw new VertexAlreadyExists("O vértice já existe no grafo");
+                throw new VertexAlreadyExistsException("O vértice já existe no grafo");
             
             for (Vertex e : vertices) { // checks if the personage is already in a vertex
                 if(e.getPersonage() == v.getPersonage()) // if it's in a vextex:

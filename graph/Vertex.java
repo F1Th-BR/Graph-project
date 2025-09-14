@@ -1,5 +1,7 @@
 package graph;
 import characters.Personage;
+import geom.Circle2;
+
 import java.awt.Point;
 
 /**
@@ -13,14 +15,13 @@ import java.awt.Point;
 
 public class Vertex {
     /* ATRIBUTES */
-    private final Personage personage; // A vertex can only reference ONE personage
+    private final Personage PERSONAGE; // A vertex can only reference ONE personage
     private int degree; // Stores the quantity of vertices (char.) connected with this one 
-    private Point coordinates; // Stores it's coordinates
-    private Point[] bounds = new Point[2];
+    private Point coordinates; // Stores its coordinates
 
     /* METHODS */
-    public Vertex(Personage personage) {
-        this.personage = personage;
+    public Vertex(Personage PERSONAGE) {
+        this.PERSONAGE = PERSONAGE;
         this.degree = 0;
     } // Constructor
 
@@ -29,16 +30,13 @@ public class Vertex {
         return degree;
     } // returns the degree/characters connected with this one
 
-    public Point[] getBounds() {
-        return this.bounds;
-    } // returns the bounds of the vertex
-
     public Point getCoordinates() {
-        return coordinates;
-    } // returns the vertex coordinates;
+        Point p = coordinates;
+        return new Point(p);
+    } // returns the vertex coordinates in a defensive copy;
 
     public Personage getPersonage() {
-        return personage;
+        return PERSONAGE;
     } // returns the personage referenced    
 
     public void incrementDegree() {
@@ -50,20 +48,16 @@ public class Vertex {
     } // decreases the degree/characters connected with this one
     
     // setter
-    public void setBounds() {
-        bounds[0].x = coordinates.x-10;
-        bounds[0].y = coordinates.y+10;
-        bounds[1].x = coordinates.x+10;
-        bounds[1].y = coordinates.y-10;
-    }
-
     public void setCoordinates(Point coordinates) {
-        this.coordinates = coordinates;
+        if(coordinates == null)
+            coordinates = new Point(coordinates);
+        else
+            this.coordinates = new Point(coordinates);
     } // sets the vertex coordinates
 
     @Override
     public String toString() {
-        return personage.getName();
+        return PERSONAGE.getName();
     } // toString
 
 } // Vertex

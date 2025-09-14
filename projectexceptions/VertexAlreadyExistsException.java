@@ -1,4 +1,4 @@
-package projectExceptions;
+package projectexceptions;
 
 /**
  * 
@@ -12,20 +12,20 @@ package projectExceptions;
  * extends Exception
  */
 
-public class VertexAlreadyExists extends Exception{
-    public VertexAlreadyExists() {
+public class VertexAlreadyExistsException extends Exception{
+    public VertexAlreadyExistsException() {
         super();
     }
 
-    public VertexAlreadyExists(String message) {
+    public VertexAlreadyExistsException(String message) {
         super(message);
     }
 
-    public VertexAlreadyExists(Throwable cause) {
+    public VertexAlreadyExistsException(Throwable cause) {
         super(cause);
     }
 
-    public VertexAlreadyExists(String message, Throwable cause) {
+    public VertexAlreadyExistsException(String message, Throwable cause) {
         super(message, cause);
     }
 }

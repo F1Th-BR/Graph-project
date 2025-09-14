@@ -12,3 +12,11 @@ Why this project exists?
 This project was conceived out of an idea I had to help me understand graphs, specifically it's 
 theory. Breadth-first Search (BFS) and Depth-first Search (DFS) are one of the methods I'd like 
 to implement to help me learn.
+
+
+About the code:
+Packages: lowercase;
+Classes and Interfaces: UpperCamelCase;
+Variables: lowerCamelCase;
+Constants: UPPER_SNAKE_CASE;
+Methods: lowerCamelCase.

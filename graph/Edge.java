@@ -1,5 +1,7 @@
 package graph;
 
+import geom.Line2;
+
 /**
  * 
  * @author Thiago Feijó de Albuquerque
@@ -13,17 +15,17 @@ package graph;
 
 public class Edge {
     /* ATRIBUTES */
-    // Obs: if the edge is NOT bidirectional, connectedVertexes[0] is ALWAYS the FROM vertex
-    private final int[] connectedVertexes = new int[2]; // used for returning the con. v.
+    // Obs: if the edge is NOT bidirectional, connectedVertices[0] is ALWAYS the FROM vertex
+    private final int[] connectedVertices = new int[2]; // used for returning the con. v.
     private String relation; // Stores the relation between two vertices (personages)
     private boolean bidirectional; // Used to define the edge as directed or not
     private int trustLevel; // weight of the edge... TODO
-
+    private Line2 line; // used when drawing the edge
 
     /* METHODS */
     public Edge(int from, int to, String relation, boolean bidirectional) {
-        this.connectedVertexes[0] = from;
-        this.connectedVertexes[1] = to;
+        this.connectedVertices[0] = from;
+        this.connectedVertices[1] = to;
         this.relation = relation;
         this.bidirectional = bidirectional;
     } // Constructor
@@ -34,7 +36,7 @@ public class Edge {
 
     // getter
     public int[] getConnectedVertexes() {
-        return connectedVertexes.clone();
+        return connectedVertices.clone();
     } // returns the index of two connected vertices in the vertices list of it's graph
 
     public String getDirection() {
@@ -43,12 +45,16 @@ public class Edge {
     } // returns the direction of the edge
 
     public int getFrom() {
-        return connectedVertexes[0];
+        return connectedVertices[0];
     } // returns the index of the FROM vertex
 
     public int getTo() {
-        return connectedVertexes[1];
+        return connectedVertices[1];
     } // returns the index of the TO vertex
+
+/*     public Line2 getLine() {
+        return line;
+    } */
 
     public String getRelation() {
         return relation;
