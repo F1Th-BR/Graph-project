@@ -1,7 +1,5 @@
 package graph;
 
-import geom.Line2;
-
 /**
  * 
  * @author Thiago Feijó de Albuquerque
@@ -20,7 +18,6 @@ public class Edge {
     private String relation; // Stores the relation between two vertices (personages)
     private boolean bidirectional; // Used to define the edge as directed or not
     private int trustLevel; // weight of the edge... TODO
-    private Line2 line; // used when drawing the edge
 
     /* METHODS */
     public Edge(int from, int to, String relation, boolean bidirectional) {
@@ -52,9 +49,7 @@ public class Edge {
         return connectedVertices[1];
     } // returns the index of the TO vertex
 
-/*     public Line2 getLine() {
-        return line;
-    } */
+
 
     public String getRelation() {
         return relation;

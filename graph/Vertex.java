@@ -1,6 +1,5 @@
 package graph;
 import characters.Personage;
-import geom.Circle2;
 
 import java.awt.Point;
 
@@ -49,10 +48,10 @@ public class Vertex {
     
     // setter
     public void setCoordinates(Point coordinates) {
-        if(coordinates == null)
-            coordinates = new Point(coordinates);
-        else
+        if(coordinates != null)
             this.coordinates = new Point(coordinates);
+        else
+            this.coordinates = new Point(0, 0);
     } // sets the vertex coordinates
 
     @Override

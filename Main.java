@@ -32,6 +32,18 @@ public class Main {
         g.addVertex(v4);
         g.addVertex(v5);
 
+        Point p1 = new Point(300, 100);
+        Point p2 = new Point(441, 181);
+        Point p3 = new Point(382, 340);
+        Point p4 = new Point(218, 340);
+        Point p5 = new Point(159, 181);
+
+
+        v1.setCoordinates(p1);
+        v2.setCoordinates(p2);
+        v3.setCoordinates(p3);
+        v4.setCoordinates(p4);
+        v5.setCoordinates(p5);
 
         g.addEdge(v1, v2, "Companheiros de missão", true);
         g.addEdge(v1, v3, "Informantes", true);
@@ -41,18 +53,10 @@ public class Main {
         g.addEdge(v3, v4, "Conhece", false);
         g.addEdge(v1, v5, "Irmãs", true);
 
-        Point p1 = new Point(300, 100);
-        Point p2 = new Point(441, 181);
-        Point p3 = new Point(382, 340);
-        Point p4 = new Point(218, 340);
-        Point p5 = new Point(159, 181);
+        g.printEdges();
     
 
-        v1.setCoordinates(p1);
-        v2.setCoordinates(p2);
-        v3.setCoordinates(p3);
-        v4.setCoordinates(p4);
-        v5.setCoordinates(p5);
+
 
         GraphViewer.display(g);
 
