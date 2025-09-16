@@ -10,7 +10,7 @@ import java.awt.Point;
  */
 
 public class Circle2 extends Shape2 {
-    private static int radius = 10; // default
+    private static int radius = 12; // default
     private static Color defaultColor = Color.BLUE;
 
     public Circle2(Point p, Color color) {

@@ -14,11 +14,11 @@ import characters.*;
 public class Main {
     public static void main(String[] args) {
         Graph g = new Graph();
-        Personage character1 = new Personage("Rosemary", 22, "Responsável", "LB");
-        Personage character2 = new Personage("Saulo", 21, "Explosivo", "N");
-        Personage character3 = new Personage("Olga", 250, "Informada", "CB");
-        Personage character4 = new Personage("Wilhelm", 120, "Centrado", "LB");
-        Personage character5 = new Personage("Amélia", 12, "Inocente", "LB");
+        Personage character1 = new Personage("Diego", 0, "Professor", "");
+        Personage character2 = new Personage("Jacó", 18, "Estudante", "");
+        Personage character3 = new Personage("Olga", 25, "Servidora", "");
+        Personage character4 = new Personage("Hytalo", 19, "Estagiário", "");
+        Personage character5 = new Personage("Cassiano", 22, "Estudante", "");
 
         Vertex v1 = new Vertex(character1);
         Vertex v2 = new Vertex(character2);
@@ -45,13 +45,14 @@ public class Main {
         v4.setCoordinates(p4);
         v5.setCoordinates(p5);
 
-        g.addEdge(v1, v2, "Companheiros de missão", true);
-        g.addEdge(v1, v3, "Informantes", true);
-        g.addEdge(v1, v4, "Mestre/aprendiz", true);
-        g.addEdge(v3, v2, "Contato", false);
-        g.addEdge(v2, v4, "Amigos", true);
-        g.addEdge(v3, v4, "Conhece", false);
-        g.addEdge(v1, v5, "Irmãs", true);
+        g.addEdge(v1, v2, "", true);
+        g.addEdge(v1, v3, "", false);
+        g.addEdge(v1, v4, "", true);
+        g.addEdge(v1, v5, "", true);
+        g.addEdge(v2, v4, "", true);
+        g.addEdge(v4, v5, "", false);
+        
+        
 
         g.printEdges();
     
