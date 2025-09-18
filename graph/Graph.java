@@ -1,6 +1,8 @@
 package graph;
+import java.awt.Point;
 import java.util.*;
 
+import math.GeometricCalculator;
 import projectexceptions.*;
 
 /**
@@ -12,7 +14,7 @@ import projectexceptions.*;
  * This class defines the graph
  */
 
-public class Graph {
+public class Graph implements GeometricCalculator {
     /* ATTRIBUTES */
     private final List<Vertex> vertices; // list of vertices
     private final List<Edge> edges; // list of edges
@@ -102,4 +104,35 @@ public class Graph {
             System.out.println("Aresta ("+e.getFrom()+","+e.getTo()+") Tipo: "+e.getDirection()+" Relação: "+e.getRelation());
         }
     } // prints all the edges
+
+    /** INTERFACE METHODS **/
+    @Override
+    public double distanceBetweenPoints(Point p1, Point p2) {
+        double x = Math.pow(p2.x - p1.x, 2);
+        double y = Math.pow(p2.y - p1.y, 2);
+
+        return Math.sqrt(x+y);
+    }
+
+    @Override
+    public double distanceBetweenPointLine(Point p1Line, Point p2Line, Point p) {
+        Point rDirector = new Point(directorLine(p1Line, p2Line));
+        Point differenceP = new Point(p.x - p1Line.x, p.y - p1Line.y);
+        double vectorProduct = differenceP.x*rDirector.y - differenceP.y*rDirector.x;
+        double rLength = Math.sqrt(Math.pow(rDirector.x, 2) + Math.pow(rDirector.y,2));
+        
+        if(vectorProduct < 0)
+            vectorProduct *= -1;
+
+        double distance = vectorProduct/rLength;
+        return distance;
+    }
+
+    @Override
+    public Point directorLine(Point p1, Point p2) {
+        int x = p2.x - p1.x;
+        int y = p2.y - p1.y;
+        Point directorLine = new Point(x, y);
+        return directorLine;
+    }
 }

@@ -32,7 +32,7 @@ public class Main {
         g.addVertex(v4);
         g.addVertex(v5);
 
-        Point p1 = new Point(300, 100);
+/*         Point p1 = new Point(300, 100);
         Point p2 = new Point(441, 181);
         Point p3 = new Point(382, 340);
         Point p4 = new Point(218, 340);
@@ -44,12 +44,13 @@ public class Main {
         v3.setCoordinates(p3);
         v4.setCoordinates(p4);
         v5.setCoordinates(p5);
-
+ */
         g.addEdge(v1, v2, "", true);
         g.addEdge(v1, v3, "", false);
         g.addEdge(v1, v4, "", true);
         g.addEdge(v1, v5, "", true);
         g.addEdge(v2, v4, "", true);
+        g.addEdge(v3, v5, null, false);
         g.addEdge(v4, v5, "", false);
         
         

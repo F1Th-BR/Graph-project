@@ -5,6 +5,8 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.*;
+import java.awt.RenderingHints;
+
 
 import graph.*;
 import geom.Circle2;
@@ -85,6 +87,9 @@ public class EdgeLine2 {
     public void drawEdges(Graphics2D g2d) {
         int i = 0;
         Point p;
+        // Anti-aliasing
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
         for (Line2 e : lines) {
             p = arrowP(e.getPoint2(), e.getPoint1());
             e.draw(g2d);
