@@ -1,0 +1,132 @@
+{
+    "personages": [
+        {
+            "name": "Ak'Thul",
+            "internalName": "ak-thul",
+            "age": 24,
+            "description": "",
+            "alignment": "CB"
+        },
+
+        {
+            "name": "Amélia Baldwin",
+            "internalName": "amelia_bdw",
+            "age": 12,
+            "description": "",
+            "alignment": "CB"
+        },
+
+        {
+            "name": "Kaizer Lex Oregon",
+            "internalName": "kaizer_lex",
+            "age": 150,
+            "description": "",
+            "alignment": "LB"
+        }, 
+
+        {
+            "name": "Neli",
+            "internalName": "neli",
+            "age": 18,
+            "description": "",
+            "alignment": "LB"
+        },
+
+        {
+            "name": "Rosemary Watson Baldwin",
+            "internalName": "rsmy_bdw",
+            "age": 22,
+            "description": "",
+            "alignment": "LB"
+        }, 
+
+        {
+            "name": "Saulo Samelost",
+            "internalName": "saulo_sml",
+            "age": 21,
+            "description": "",
+            "alignment": "NB"
+        }, 
+
+        {
+            "name": "Wilhelm Albretch",
+            "internalName": "wilhelm",
+            "age": 120,
+            "description": "",
+            "alignment": "LB"
+        }
+    ],
+
+    "edges": [
+        {
+            "from": 0,
+            "to": 2,
+            "relation": "companheiros",
+            "bidirectional": true
+        },
+
+        {
+            "from": 0,
+            "to": 3,
+            "relation": "companheiros",
+            "bidirectional": true
+        },
+        
+        {
+            "from": 0,
+            "to": 5,
+            "relation": "companheiros",
+            "bidirectional": true
+        },
+        
+        {
+            "from": 1,
+            "to": 4,
+            "relation": "irmãs",
+            "bidirectional": true
+        },
+
+        {
+            "from": 2,
+            "to": 3,
+            "relation": "companheiros",
+            "bidirectional": true
+        },
+
+        {
+            "from": 2,
+            "to": 5,
+            "relation": "companheiros",
+            "bidirectional": true
+        },
+
+        {
+            "from": 3,
+            "to": 5,
+            "relation": "companheiros",
+            "bidirectional": true
+        },
+
+        {
+            "from": 5,
+            "to": 6,
+            "relation": "amigos",
+            "bidirectional": true
+        },
+
+        {
+            "from": 4,
+            "to": 5,
+            "relation": "conhece",
+            "bidirectional": false
+        },
+
+        {
+            "from": 4,
+            "to": 6,
+            "relation": "mestre/aprendiz",
+            "bidirectional": true
+        }
+    ]
+
+}

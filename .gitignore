@@ -1,0 +1,5 @@
+# ignore input template
+src/main/data/example.json
+
+# ingore bin folder
+bin/

@@ -1,0 +1,27 @@
+{
+    "personages": [
+      {
+        "name": "King Arthur",
+        "internalName": "arthur",
+        "age": 45,
+        "description": "King of Camelot",
+        "alignment": "Good"
+      },
+      {
+        "name": "Morgana le Fay",
+        "internalName": "morgana",
+        "age": 30,
+        "description": "Powerful sorceress",
+        "alignment": "Evil"
+      }
+    ],
+    "edges": [
+      {
+        "from": 0,
+        "to": 1,
+        "relation": "enemy",
+        "bidirectional": false
+      }
+    ]
+}
+  
