@@ -1,6 +1,5 @@
 package com.graphproject.loaders;
 
-
 import com.graphproject.domain.characters.Personage;
 import com.graphproject.domain.graph.Graph;
 import com.graphproject.domain.graph.Vertex;
@@ -12,112 +11,182 @@ import java.util.*;
 import javax.imageio.ImageIO;
 
 /**
- * 
+ *
  * @author Thiago Feijó de Albuquerque
  */
 
 /**
- * This class is responsible for reading a graph structure from a JSON file
- * and constructing the corresponding Graph object.
- * 
- * <p>The graph consists of vertices, each representing a personage, and edges
- * that define relationships between them. The personages are associated with images,
- * and the edges define directed or undirected relationships.
- * 
- * <p>The JSON file should contain personage data (name, internalName, age, etc.) 
- * and edge data (from, to, relation, bidirectional).
+ * Loads a {@link Graph} from a JSON file and associates personage images from a folder.
+ *
+ * <p>The JSON file must follow the schema below. Every field except {@code name} and
+ * {@code internalName} is optional — missing fields are silently ignored and the
+ * corresponding Personage attribute keeps its default value (empty string / zero).
+ * The {@code extras} object accepts any key-value pairs and is forwarded to
+ * {@link Personage.Builder#extra(String, Object)}, so new attributes can be added to
+ * the JSON without touching any Java code.
+ *
+ * <pre>{@code
+ * {
+ *   "personages": [
+ *     {
+ *       "name":           "Gandalf",        // required
+ *       "internalName":   "gandalf",        // required  (used to find gandalf.png)
+ *       "age":            2019,             // optional
+ *       "race":           "Maia",           // optional
+ *       "sex":            "M",              // optional  ("M" or "F")
+ *       "characterClass": "Mago",           // optional
+ *       "subclass":       "Mago Cinzento",  // optional
+ *       "alignment":      "Neutro e Bom",   // optional
+ *       "description":    "Um dos Istari.", // optional
+ *       "traits":         ["Sábio"],        // optional
+ *       "extras": {                         // optional — any key-value pairs
+ *         "nivel": 20,
+ *         "pontosMagia": 500
+ *       }
+ *     }
+ *   ],
+ *   "edges": [
+ *     { "from": 0, "to": 1, "relation": "amigos", "bidirectional": true }
+ *   ]
+ * }
+ * }</pre>
  */
 public class GraphLoader {
 
-    /* ===== INTERNAL CLASSES ===== */
+    /* ===== INTERNAL DTO CLASSES ===== */
 
     /**
-     * Represents data for a personage.
-     * <p>Used to deserialize personage data from the JSON file.
+     * Data Transfer Object that mirrors the JSON structure for a personage.
+     *
+     * <p>Gson maps JSON field names directly to Java field names; fields absent in
+     * the JSON are left as {@code null}/zero, which the builder treats as "not set".
+     * {@code extras} uses a raw {@code Map<String, Object>} so Gson deserialises any
+     * JSON object without needing to know the keys in advance.
      */
     static class PersonageData {
-        String name;          // The name of the personage
-        String internalName;  // The internal name of the personage (for image matching)
-        int age;              // The age of the personage
-        String description;   // A brief description of the personage
-        String alignment;     // The alignment of the personage (e.g., good, evil)
+        String name;                        // required
+        String internalName;               // required
+        int age;                           // optional (default 0)
+        String description;                // optional
+        String alignment;                  // optional
+        String race;                       // optional
+        String sex;                        // optional ("M" or "F")
+        String characterClass;             // optional
+        String subclass;                   // optional
+        List<String> traits;               // optional
+        Map<String, Object> extras;        // optional — arbitrary extra attributes
     }
 
     /**
-     * Represents data for an edge in the graph.
-     * <p>Used to deserialize edge data from the JSON file.
+     * Data Transfer Object that mirrors the JSON structure for an edge.
      */
     static class EdgeData {
-        int from;            // Index of the "from" vertex
-        int to;              // Index of the "to" vertex
-        String relation;     // The relationship type between the two vertices
-        boolean bidirectional; // Whether the edge is bidirectional or directed
+        int from;              // index of the "from" vertex in the personages array
+        int to;                // index of the "to" vertex
+        String relation;       // label describing the relationship
+        boolean bidirectional; // true = u ↔ v, false = u → v
     }
 
     /**
-     * Contains the graph data including personages and edges.
+     * Root wrapper that holds the full graph data from JSON.
      */
     static class GraphData {
-        List<PersonageData> personages; // List of personages in the graph
-        List<EdgeData> edges;           // List of edges connecting the personages
+        List<PersonageData> personages;
+        List<EdgeData> edges;
     }
 
-    /* ===== STATIC METHODS ===== */
+    /* ===== SUPPORTED IMAGE EXTENSIONS ===== */
+
+    /** File extensions tried in order when looking for a personage image. */
+    private static final List<String> IMAGE_EXTENSIONS =
+        Collections.unmodifiableList(Arrays.asList(".png", ".jpg", ".jpeg"));
+
+    /* ===== STATIC FACTORY ===== */
 
     /**
-     * Loads a graph from a JSON file and associates personages with images from a folder.
-     * <p>The graph is constructed by reading personage and edge data from the JSON file.
-     * Personages are then associated with image files based on their internal name.
-     * 
-     * @param jsonPath         The path to the JSON file containing graph data
-     * @param imageFolderPath  The folder path where personage images are stored
-     * @return The constructed Graph object
-     * @throws Exception If any error occurs during file reading, image loading, or graph creation
+     * Loads a graph from a JSON file and resolves personage images from an image folder.
+     *
+     * <p>Building steps:
+     * <ol>
+     *   <li>Parse the JSON into {@link GraphData}.</li>
+     *   <li>For each personage entry, build a {@link Personage} via the Builder,
+     *       feeding only the fields that are present in the JSON.</li>
+     *   <li>Attempt to load an image file named {@code <internalName>.<ext>} from
+     *       {@code imageFolderPath}. If found, attach it via
+     *       {@link Personage#setPersonageImage}. If not found, the vertex is rendered
+     *       with the blue fallback circle (see VertexCircle2).</li>
+     *   <li>Add each vertex to the graph, then add all edges.</li>
+     * </ol>
+     *
+     * @param jsonPath        Path to the JSON file (relative or absolute)
+     * @param imageFolderPath Path to the folder containing personage image files
+     * @return The fully constructed {@link Graph}
+     * @throws Exception if the JSON file cannot be read or is malformed
      */
     public static Graph loadGraphFromJson(String jsonPath, String imageFolderPath) throws Exception {
 
-        Gson gson = new Gson();            // Gson object for parsing JSON
-        Reader reader = new FileReader(jsonPath); // Reader to read the JSON file
-        GraphData data = gson.fromJson(reader, GraphData.class); // Deserialize JSON into GraphData
+        // Parse the JSON file into the DTO hierarchy
+        Gson gson = new Gson();
+        Reader reader = new FileReader(jsonPath);
+        GraphData data = gson.fromJson(reader, GraphData.class);
+        reader.close();
 
-        Graph graph = new Graph(); // Create an empty graph
-        List<Vertex> vertices = new ArrayList<>(); // List to hold all vertices
+        Graph graph    = new Graph();
+        List<Vertex> vertices = new ArrayList<>();
 
-        // Supported image file extensions for personage images
-        List<String> extensions = Arrays.asList(".png", ".jpg", ".jpeg");
-
-        // Step 1: Create Personages, set image by internalName, and create Vertices
+        // ── Step 1: create each Personage via Builder, then its Vertex ──────────
         for (PersonageData pd : data.personages) {
-            // Create a Personage object using the data from JSON
-            Personage p = new Personage(pd.name, pd.internalName, pd.age, pd.description, pd.alignment);
 
-            // Attempt to find and load the image file corresponding to the personage's internal name
-            for (String ext : extensions) {
-                File imgFile = new File(imageFolderPath + "/" + pd.internalName + ext);
-                if (imgFile.exists()) {
-                    BufferedImage image = ImageIO.read(imgFile); // Read the image file
-                    p.setPersonageImage(image); // Set the image for the personage
-                    break; // Exit after finding the first valid image
+            // Start with the two mandatory fields
+            Personage.Builder builder = new Personage.Builder(pd.name, pd.internalName);
+
+            // Feed optional core fields only when present in the JSON
+            // (Gson leaves numeric fields at 0 and String fields at null when absent)
+            if (pd.age > 0)                         builder.age(pd.age);
+            if (pd.description != null)             builder.description(pd.description);
+            if (pd.alignment != null)               builder.alignment(pd.alignment);
+            if (pd.race != null)                    builder.race(pd.race);
+            if (pd.sex != null)                     builder.sex(pd.sex);
+            if (pd.characterClass != null)          builder.characterClass(pd.characterClass);
+            if (pd.subclass != null)                builder.subclass(pd.subclass);
+            if (pd.traits != null)                  builder.traits(pd.traits);
+
+            // Forward any extra attributes — new JSON keys are picked up automatically
+            // here without touching the Builder or Personage source code
+            if (pd.extras != null) {
+                for (Map.Entry<String, Object> entry : pd.extras.entrySet()) {
+                    builder.extra(entry.getKey(), entry.getValue());
                 }
             }
 
-            // Generate a Vertex for this Personage and add it to the graph
-            Vertex v = p.genVertex(); // Generate vertex for personage
-            vertices.add(v);           // Add the vertex to the list
-            graph.addVertex(v);        // Add the vertex to the graph
+            Personage personage = builder.build();
+
+            // ── Step 2: try to load the image for this personage ─────────────────
+            for (String ext : IMAGE_EXTENSIONS) {
+                File imgFile = new File(imageFolderPath + "/" + pd.internalName + ext);
+                if (imgFile.exists()) {
+                    BufferedImage image = ImageIO.read(imgFile);
+                    personage.setPersonageImage(image);
+                    break; // stop at the first match
+                }
+            }
+            // If no image file is found, personageImage stays null and the renderer
+            // will draw the blue fallback circle instead (RF-08).
+
+            // ── Step 3: create the vertex and register it ────────────────────────
+            Vertex v = personage.genVertex();
+            vertices.add(v);
+            graph.addVertex(v);
         }
 
-        // Step 2: Create and add Edges between Vertices based on the edge data
+        // ── Step 4: create all edges using the vertex indices from the JSON ──────
         for (EdgeData ed : data.edges) {
-            // Retrieve the 'from' and 'to' vertices from the list
             Vertex from = vertices.get(ed.from);
-            Vertex to = vertices.get(ed.to);
-            
-            // Add the edge to the graph with the given relation and directionality
+            Vertex to   = vertices.get(ed.to);
             graph.addEdge(from, to, ed.relation, ed.bidirectional);
         }
 
-        return graph; // Return the constructed graph
+        return graph;
     }
 
 } // GraphLoader
